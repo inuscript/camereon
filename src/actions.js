@@ -10,7 +10,8 @@ export const getImage = function(url){
     loadImage(url).then((preview) => {
       return dispatch(setPreview(preview))
     }).catch(e => {
-      return dispatch(setPreview(e))
+      console.error(e)
+      // return dispatch(setPreview(e))
     })
   }
 }

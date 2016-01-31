@@ -6,9 +6,16 @@ import { createStore, bindActionCreators, applyMiddleware } from "redux"
 import * as actions from "./actions"
 import { connect, Provider } from "react-redux"
 import thunk from "redux-thunk"
+import {crashReporter} from "./middleware"
+import multi from 'redux-multi'
 
 function mapStateToProps(state){
-  return state
+  let preview = state.preview
+  return {
+    url: state.url,
+    preview: preview,
+    histogram: preview ? preview.histogram : {}
+  }
 }
 
 function mapDispatchToProps (dispatch) {
@@ -19,7 +26,7 @@ function setupStore(){
   const initialState = {
     url: "http://www.sonymusic.co.jp/"
   }
-  const middleware = applyMiddleware(thunk)
+  const middleware = applyMiddleware(thunk, multi, crashReporter)
   return createStore(reducer, initialState, middleware)
 }
 
@@ -27,7 +34,7 @@ function connectedApp(store){
   let Connected = connect(mapStateToProps, mapDispatchToProps)(Container)
   return (
     <Provider store={store}>
-      <Connected  />
+      <Connected />
     </Provider>
   )
 }

@@ -1,7 +1,6 @@
 import React, {Component} from "react"
-import ReactDOM from "react-dom"
 import parse from "pixelbank"
-
+import Preview from "./Preview"
 
 const Input = function({url, onClick, onChange}){
   return (
@@ -12,25 +11,13 @@ const Input = function({url, onClick, onChange}){
   )
 }
 
-class Preview extends Component{
-  getContext(){
-    return ReactDOM.findDOMNode(this).getContext('2d')
-  }
-  componentDidUpdate(){
-    this.drawCanvas()    
-  }
-  drawCanvas(){
-    if(!this.props.preview) return
-    this.getContext().drawImage(this.props.preview.imageElement, 0,0)
-  }
-  handleLoad(){
-    this.drawCanvas()
-  }
+class Histogram extends Component{
   render(){
-    let { preview } = this.props
-    return <canvas ref="cnv" />
+    console.log(this.props.histogram)
+    return <div></div>
   }
 }
+
 export default class App extends Component{
   handleSend(){
     this.props.getImage(this.props.url)
@@ -50,6 +37,7 @@ export default class App extends Component{
           onChange={this.handleChange.bind(this)}
         />
         <Preview preview={this.props.preview} />
+        <Histogram histogram={this.props.histogram} />
       </div>
     )
   }

@@ -1,6 +1,6 @@
 import logoApi from "../api/logo"
 import parse from "pixelbank"
-
+import Color from "color"
 const promiseImage = function(src){
   return new Promise((resolve, reject) => {
     let imageElement = document.createElement("img")
@@ -10,20 +10,51 @@ const promiseImage = function(src){
     imageElement.src = src
   })
 }
+
+const imgToData = function(imageElement){
+  let canvas = document.createElement("canvas")
+  canvas.width = imageElement.width
+  canvas.height = imageElement.height
+  let ctx = canvas.getContext('2d')
+  ctx.drawImage(imageElement, 0,0)
+  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  return imageData
+}
+
 const srcToImage = function(src, onImg){
   return promiseImage(src)
     .then((imageElement, e) => {
-      let canvas = document.createElement("canvas")
-      let ctx = canvas.getContext('2d')
-      ctx.drawImage(imageElement, 0,0)
-      let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      let imageData = imgToData(imageElement)
       return {
         src,
         imageElement,
-        imageData,
-        parsed: parse(imageData)
+        imageData
       }
     })
+}
+
+const histogram = function(parsed){
+  let colors = {}
+  parsed.map((pix) => {
+    let str = Color(pix.color).rgbString()
+    if(!colors[str]){
+      colors[str] = 1
+      return
+    }
+    colors[str]++ 
+  })
+  return colors
+}
+const analyse = function(parsed){
+  let cls = parsed.map((pix) => {
+    let { top, left, color} = pix
+    let hsv = Color(pix.color).hsv()
+    console.log(hsv)
+    return {
+      top, left, hsv
+    }
+  })
+  console.log(cls)
 }
 
 export const loadImage = function(url){
@@ -39,5 +70,10 @@ export const loadImage = function(url){
       return src
     }).then(src => {
       return srcToImage(src)
+    }).then(imgs => {
+      let parsed = parse(imgs.imageData)
+      // analyse(parsed)
+      imgs.histogram = histogram(parsed)
+      return imgs
     })
 }
