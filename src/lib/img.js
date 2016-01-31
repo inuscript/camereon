@@ -49,9 +49,9 @@ const histogram = function(parsed){
       color: e[0],
       count: e[1]
     }
-  }).sort(((a,b) => {
-    return a.count > b.count
-  }))
+  }).sort(function(a,b) {
+    return b.count - a.count
+  })
 }
 const analyse = function(parsed){
   let cls = parsed.map((pix) => {

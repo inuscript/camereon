@@ -12,9 +12,20 @@ const Input = function({url, onClick, onChange}){
 }
 
 class Histogram extends Component{
+  list(key, {count, color}){
+    let style = {
+      background : color
+    }
+    return <li key={key} style={style}>{color}:{count}</li>
+  }
   render(){
-    console.log(this.props.histogram.slice(0, 10))
-    return <div></div>
+    let top = this.props.histogram.slice(0, 10000)
+    let lists = top.map((item, i) => {
+      return this.list(i, item)
+    })
+    return <ul>
+      {lists}
+    </ul>
   }
 }
 
