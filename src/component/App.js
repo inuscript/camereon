@@ -41,6 +41,9 @@ class App extends Component{
   handleChange(e){
     this.props.changeUrl(e.target.input)
   }
+  handleLoad(e){
+    console.log(e)
+  }
   render(){
     console.log(this.state.preview)
     return (
@@ -50,7 +53,7 @@ class App extends Component{
           onClick={this.handleSend.bind(this)}
           onChange={this.handleChange.bind(this)}
         />
-        <img src={this.state.preview} />
+        <img src={this.state.preview} onLoad={this.handleLoad.bind(this)}/>
       </div>
     )
   }
