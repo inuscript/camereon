@@ -18,10 +18,21 @@ class Histogram extends Component{
     }
     return <li key={key} style={style}>{color}:{count}</li>
   }
-  render(){
-    let top = this.props.histogram.slice(0, 10000)
+  renderCluster(clust){
+    let top = clust.slice(0, 5)
     let lists = top.map((item, i) => {
       return this.list(i, item)
+    })
+    return <ul>
+      {lists}
+    </ul>
+  }
+  render(){
+    let clusters = this.props.histogram
+    let lists = clusters.map((item, i) => {
+      return <li key={i} >
+        {this.renderCluster(item) }
+      </li>
     })
     return <ul>
       {lists}

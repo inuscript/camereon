@@ -7,9 +7,18 @@ export default function clustering(histogram){
     return Color(color).hsvArray()
   })
   return new Promise((resolve, reject) => {
-    kmeans(hsvs, 5, (err, res) => {
+    kmeans(hsvs, 10, (err, clusters) => {
       if(err) return relect(err)
-      resolve()
+      let cls = clusters.map( (clsts) => {
+        return clsts.map( (c) => {
+          let color = Color({h: c[0], s: c[1], v: c[2]}).rgbString()
+          return {
+            color: color,
+            count: histogram[color]
+          }
+        })
+      })
+      resolve(cls)
     })
   })
 }

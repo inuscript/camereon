@@ -55,7 +55,7 @@ export const histogram = function(parsed){
   })
 }
 export const analyse = function(parsed){
-  clustering(parsed)
+  return clustering(parsed)
 }
 
 export const loadImage = function(url){
