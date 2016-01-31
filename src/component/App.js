@@ -12,22 +12,30 @@ const Input = function({url, onClick, onChange}){
   )
 }
 class ImgCanvas extends Component{
-  getContext(){
-    return 
+  componentDidUpdate(){
+    this.drawCanvas()    
   }
   drawCanvas(){
     let canvas = ReactDOM.findDOMNode(this.refs.cnv)
     let ctx = canvas.getContext('2d')
-    ctx.drawImage(ReactDOM.findDOMNode(this.refs.img), 0,0)
-    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    console.log(imgData)
+    console.log(this.props.preview)
+    if(!this.props.preview){
+      return
+    }
+    console.log(this.props.preview)
+    // ctx.drawImage(ReactDOM.findDOMNode(this.refs.img), 0,0)
+    // let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+    // console.log(imgData)
+    ctx.drawImage(this.props.preview, 0,0)
   }
   handleLoad(){
     this.drawCanvas()
   }
   render(){
+    let { preview } = this.props
+    console.log(preview)
     return <div>
-      <img ref="img" src={this.props.preview} onLoad={this.handleLoad.bind(this)}/>
+      {/*<img ref="img" src={this.props.preview} onLoad={this.handleLoad.bind(this)}/>*/}
       <canvas ref="cnv" />
     </div>
   }
