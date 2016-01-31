@@ -23,8 +23,7 @@ function setupStore(){
   return createStore(reducer, initialState, middleware)
 }
 
-function connectedApp(){
-  let store = setupStore()
+function connectedApp(store){
   let Connected = connect(mapStateToProps, mapDispatchToProps)(Container)
   return (
     <Provider store={store}>
@@ -35,7 +34,8 @@ function connectedApp(){
 
 function render(){
   let containerEl = document.querySelector("#container")
-  ReactDom.render(connectedApp(), containerEl)
+  let store = setupStore()
+  ReactDom.render(connectedApp(store), containerEl)
 }
 
 render()
