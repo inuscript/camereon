@@ -1,4 +1,5 @@
 import logoApi from "../api/logo"
+import parse from "pixelbank"
 
 const promiseImage = function(src){
   return new Promise((resolve, reject) => {
@@ -20,6 +21,7 @@ const srcToImage = function(src, onImg){
         src,
         imageElement,
         imageData,
+        parsed: parse(imageData)
       }
     })
 }
