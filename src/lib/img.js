@@ -37,7 +37,5 @@ export const loadImage = function(url){
       return src
     }).then(src => {
       return srcToImage(src)
-    }).catch(e => {
-      console.log(e)
     })
 }

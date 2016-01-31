@@ -9,7 +9,8 @@ export const getImage = function(url){
   return function(dispatch){
     loadImage(url).then((preview) => {
       return dispatch(setPreview(preview))
+    }).catch(e => {
+      return dispatch(setPreview(e))
     })
-
   }
 }
