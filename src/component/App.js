@@ -26,7 +26,7 @@ class ImgCanvas extends Component{
     // ctx.drawImage(ReactDOM.findDOMNode(this.refs.img), 0,0)
     // let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
     // console.log(imgData)
-    ctx.drawImage(this.props.preview, 0,0)
+    ctx.drawImage(this.props.preview.imageElement, 0,0)
   }
   handleLoad(){
     this.drawCanvas()
