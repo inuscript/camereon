@@ -11,33 +11,24 @@ const Input = function({url, onClick, onChange}){
     </div>
   )
 }
-class ImgCanvas extends Component{
+
+class Preview extends Component{
+  getContext(){
+    return ReactDOM.findDOMNode(this).getContext('2d')
+  }
   componentDidUpdate(){
     this.drawCanvas()    
   }
   drawCanvas(){
-    let canvas = ReactDOM.findDOMNode(this.refs.cnv)
-    let ctx = canvas.getContext('2d')
-    console.log(this.props.preview)
-    if(!this.props.preview){
-      return
-    }
-    console.log(this.props.preview)
-    // ctx.drawImage(ReactDOM.findDOMNode(this.refs.img), 0,0)
-    // let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-    // console.log(imgData)
-    ctx.drawImage(this.props.preview.imageElement, 0,0)
+    if(!this.props.preview) return
+    this.getContext().drawImage(this.props.preview.imageElement, 0,0)
   }
   handleLoad(){
     this.drawCanvas()
   }
   render(){
     let { preview } = this.props
-    console.log(preview)
-    return <div>
-      {/*<img ref="img" src={this.props.preview} onLoad={this.handleLoad.bind(this)}/>*/}
-      <canvas ref="cnv" />
-    </div>
+    return <canvas ref="cnv" />
   }
 }
 export default class App extends Component{
@@ -58,7 +49,7 @@ export default class App extends Component{
           onClick={this.handleSend.bind(this)}
           onChange={this.handleChange.bind(this)}
         />
-        <ImgCanvas preview={this.props.preview} />
+        <Preview preview={this.props.preview} />
       </div>
     )
   }
