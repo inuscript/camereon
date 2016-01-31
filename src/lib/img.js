@@ -1,4 +1,5 @@
 import logoApi from "../api/logo"
+import clustering from "./clustering"
 import parse from "pixelbank"
 import Color from "color"
 
@@ -34,7 +35,7 @@ const srcToImage = function(src, onImg){
     })
 }
 
-const histogram = function(parsed){
+export const histogram = function(parsed){
   let colors = {}
   parsed.forEach((pix) => {
     let str = Color(pix.color).rgbString()
@@ -53,16 +54,8 @@ const histogram = function(parsed){
     return b.count - a.count
   })
 }
-const analyse = function(parsed){
-  let cls = parsed.map((pix) => {
-    let { top, left, color} = pix
-    let hsv = Color(pix.color).hsv()
-    console.log(hsv)
-    return {
-      top, left, hsv
-    }
-  })
-  console.log(cls)
+export const analyse = function(parsed){
+  clustering(parsed)
 }
 
 export const loadImage = function(url){
@@ -80,10 +73,9 @@ export const loadImage = function(url){
       return srcToImage(src)
     }).then(imgs => {
       let parsed = parse(imgs.imageData)
-      // analyse(parsed)
       return {
         preview: imgs,
-        histogram : histogram(parsed)
+        parsed: parsed
       }
     })
 }
