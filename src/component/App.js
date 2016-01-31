@@ -13,7 +13,7 @@ const Input = function({url, onClick, onChange}){
 
 class Histogram extends Component{
   render(){
-    console.log(this.props.histogram)
+    console.log(this.props.histogram.slice(0, 10))
     return <div></div>
   }
 }

@@ -2,12 +2,17 @@ import { combineReducers } from "redux"
 import * as types from "./types"
 
 const preview = (state = null, action) => {
-  if(action.error){
-    console.log(action.payload)
-    throw action.payload
-  }
   switch(action.type){
     case types.SET_PREVIEW:
+      return action.payload
+    default:
+      return state
+  }
+}
+
+const histogram = (state = [], action) => {
+  switch(action.type){
+    case types.SET_HISTOGRAM:
       return action.payload
     default:
       return state
@@ -24,5 +29,5 @@ const url = (state = null, action) => {
 }
 
 export default combineReducers({  
-  preview, url
+  preview, url, histogram
 })

@@ -1,6 +1,7 @@
 import logoApi from "../api/logo"
 import parse from "pixelbank"
 import Color from "color"
+
 const promiseImage = function(src){
   return new Promise((resolve, reject) => {
     let imageElement = document.createElement("img")
@@ -35,7 +36,7 @@ const srcToImage = function(src, onImg){
 
 const histogram = function(parsed){
   let colors = {}
-  parsed.map((pix) => {
+  parsed.forEach((pix) => {
     let str = Color(pix.color).rgbString()
     if(!colors[str]){
       colors[str] = 1
@@ -43,7 +44,14 @@ const histogram = function(parsed){
     }
     colors[str]++ 
   })
-  return colors
+  return Object.entries(colors).map(e => {
+    return {
+      color: e[0],
+      count: e[1]
+    }
+  }).sort(((a,b) => {
+    return a.count > b.count
+  }))
 }
 const analyse = function(parsed){
   let cls = parsed.map((pix) => {
@@ -73,7 +81,9 @@ export const loadImage = function(url){
     }).then(imgs => {
       let parsed = parse(imgs.imageData)
       // analyse(parsed)
-      imgs.histogram = histogram(parsed)
-      return imgs
+      return {
+        preview: imgs,
+        histogram : histogram(parsed)
+      }
     })
 }

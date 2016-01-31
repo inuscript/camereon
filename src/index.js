@@ -10,12 +10,13 @@ import {crashReporter} from "./middleware"
 import multi from 'redux-multi'
 
 function mapStateToProps(state){
-  let preview = state.preview
-  return {
-    url: state.url,
-    preview: preview,
-    histogram: preview ? preview.histogram : {}
-  }
+  return state
+  // let preview = state.preview
+  // return {
+  //   url: state.url,
+  //   preview: preview,
+  //   histogram: preview ? preview.histogram : {}
+  // }
 }
 
 function mapDispatchToProps (dispatch) {
