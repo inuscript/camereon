@@ -2,9 +2,10 @@ import React, { Component } from "react"
 import ReactDom from "react-dom"
 import Container from "./Component/App.js"
 import reducer from "./reducer"
-import { createStore, bindActionCreators } from "redux"
+import { createStore, bindActionCreators, applyMiddleware } from "redux"
 import * as actions from "./actions"
 import { connect, Provider } from "react-redux"
+import thunk from "redux-thunk"
 
 function mapStateToProps(state){
   return state
@@ -14,8 +15,16 @@ function mapDispatchToProps (dispatch) {
   return bindActionCreators(actions, dispatch)
 }
 
+function setupStore(){
+  const initialState = {
+    url: "http://www.sonymusic.co.jp/"
+  }
+  const middleware = applyMiddleware(thunk)
+  return createStore(reducer, initialState, middleware)
+}
+
 function connectedApp(){
-  let store = createStore(reducer, {})
+  let store = setupStore()
   let Connected = connect(mapStateToProps, mapDispatchToProps)(Container)
   return (
     <Provider store={store}>

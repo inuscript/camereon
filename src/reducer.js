@@ -1,9 +1,18 @@
 import { combineReducers } from "redux"
 import * as types from "./types"
 
-const image = (state = null, action) => {
+const preview = (state = null, action) => {
   switch(action.type){
-    case types.SET_IMAGE:
+    case types.SET_PREVIEW:
+      return action.payload
+    default:
+      return state
+  }
+}
+
+const url = (state = null, action) => {
+  switch(action.type){
+    case types.CHANGE_URL:
       return action.payload
     default:
       return state
@@ -11,5 +20,5 @@ const image = (state = null, action) => {
 }
 
 export default combineReducers({  
-  image
+  preview, url
 })
