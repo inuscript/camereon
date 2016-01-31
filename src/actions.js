@@ -10,10 +10,10 @@ export const getImage = function(url){
   return function(dispatch){
     loadImage(url).then((imgs) => {
       let {preview, parsed} = imgs
-
+      let hist = histogram(parsed)
       dispatch(setPreview(preview))
-      dispatch(setHistogram(histogram(parsed)))
-      analyse(parsed)
+      dispatch(setHistogram(hist))
+      analyse(hist)
     }).catch(e => {
       console.error(e)
       // return dispatch(setPreview(e))
