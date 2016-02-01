@@ -20,12 +20,14 @@ const quant = function(imageData){
   let colors = parsed.map((px) => {
     return Color(px.color).rgbArray()
   })
-  let cmap = quantize(colors, 10)
-  // // console.log(cmap.palette())
-  let qunatized = parsed.map( (px) => {
-    return cmap.map(px)
-  })
-  // console.log(qunatized)
+  let cmap = quantize(colors, 16)
+  // console.log(cmap.palette())
+  let quantized = parsed.reduce( (r, px) => {
+    let quant = [...cmap.map(Color(px.color).rgbArray()), px.color.a]
+    // console.log(px.color, quant)
+    return r.concat(quant)
+  }, [])
+  return new Uint8ClampedArray(quantized)
 }
 
 const drawImage = function(canvas, imageElement){
@@ -41,13 +43,26 @@ const imgToData = function(imageElement){
   let canvas = document.createElement("canvas")
   let ctx = drawImage(canvas, imageElement)
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-  quant(imageData)
   return imageData
+}
+
+const qunatizedImg = function(imageData, imageElement){
+  let q = quant(imageData)
+  let canvas = document.createElement("canvas")
+  let ctx = canvas.getContext('2d')
+  let pl = ctx.getImageData(0,0, imageElement.width, imageElement.height)
+  pl.data.set(q)
+  ctx.putImageData(pl,0,0)
+  return canvas.toDataURL()
 }
 
 const srcToImage = function(src, onImg){
   return promiseImage(src)
-    .then((imageElement, e) => {
+    .then((_imageElement, e) => {
+      let imageData = imgToData(_imageElement)
+      let qUrl = qunatizedImg(imageData, _imageElement)
+      return promiseImage(qUrl)
+    }).then( (imageElement, e) => {
       let imageData = imgToData(imageElement)
       return {
         src,
