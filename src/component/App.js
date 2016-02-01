@@ -14,18 +14,20 @@ const Input = function({url, onClick, onChange}){
 class Histogram extends Component{
   list(key, {count, color}){
     let style = {
-      background : color
+      background : color,
+      listStyleType: "decimal"
     }
     return <li key={key} style={style}>{color}:{count}</li>
   }
   renderCluster(clust){
-    let top = clust.slice(0, 5)
+    let top = clust.slice(0, 300)
     let lists = top.map((item, i) => {
       return this.list(i, item)
     })
-    return <ul>
+
+    return <ol>
       {lists}
-    </ul>
+    </ol>
   }
   render(){
     let clusters = this.props.histogram

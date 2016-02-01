@@ -12,9 +12,12 @@ export default function clustering(histogram){
       let cls = clusters.map( (clsts) => {
         return clsts.map( (c) => {
           let color = Color({h: c[0], s: c[1], v: c[2]}).rgbString()
+          let hist = histogram.find((item) => {
+            return item.color == color
+          })
           return {
             color: color,
-            count: histogram[color]
+            count: hist ? hist.count : 0
           }
         })
       })

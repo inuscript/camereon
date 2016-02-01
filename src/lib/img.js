@@ -1,7 +1,8 @@
-import logoApi from "../api/logo"
+import {logoApi} from "../api"
 import clustering from "./clustering"
 import parse from "pixelbank"
 import Color from "color"
+import RgbQuant from "rgbquant";
 
 const promiseImage = function(src){
   return new Promise((resolve, reject) => {
@@ -13,12 +14,40 @@ const promiseImage = function(src){
   })
 }
 
-const imgToData = function(imageElement){
-  let canvas = document.createElement("canvas")
+const quant = function(canvas){
+  let q = new RgbQuant({
+    colors: 4
+  })
+  q.sample(canvas)
+  let palette = q.palette(true)
+  let reduce = q.reduce(canvas)
+
+  let rcan = document.createElement("canvas")
+  let rctx = rcan.getContext('2d')
+  rctx.imageSmoothingEnabled = false
+
+  let imgd = rctx.createImageData(canvas.width, canvas.height)
+  let buf32 = new Uint32Array(imgd.data.buffer)
+  buf32.set(new Uint32Array(reduce.buffer))
+  rctx.putImageData(imgd, 0, 0)
+
+  let ctx = canvas.getContext('2d')
+  ctx.drawImage(rcan, 0, 0)
+}
+
+const drawImage = function(canvas, imageElement){
   canvas.width = imageElement.width
   canvas.height = imageElement.height
   let ctx = canvas.getContext('2d')
+  ctx.imageSmoothingEnabled = false
   ctx.drawImage(imageElement, 0,0)
+  return ctx
+}
+
+const imgToData = function(imageElement){
+  let canvas = document.createElement("canvas")
+  let ctx = drawImage(canvas, imageElement)
+  quant(canvas)
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   return imageData
 }

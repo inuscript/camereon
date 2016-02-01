@@ -12,10 +12,10 @@ export const getImage = function(url){
       let {preview, parsed} = imgs
       let hist = histogram(parsed)
       dispatch(setPreview(preview))
-      // dispatch(setHistogram(hist))
-      analyse(hist).then(clusters => {
-        dispatch(setHistogram(clusters))
-      })
+      dispatch(setHistogram([hist]))
+      // analyse(hist).then(clusters => {
+      //   dispatch(setHistogram(clusters))
+      // })
     }).catch(e => {
       console.error(e)
       // return dispatch(setPreview(e))
