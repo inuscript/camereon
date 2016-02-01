@@ -19,7 +19,7 @@ const histogram = (state = [], action) => {
   }
 }
 
-const url = (state = null, action) => {
+const url = (state = "", action) => {
   switch(action.type){
     case types.CHANGE_URL:
       return action.payload

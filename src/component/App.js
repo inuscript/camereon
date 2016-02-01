@@ -47,7 +47,7 @@ export default class App extends Component{
     this.props.getImage(this.props.url)
   }
   handleChange(e){
-    this.props.changeUrl(e.target.input)
+    this.props.changeUrl(e.target.value)
   }
   handleLoad(e){
     console.log(e.target)
