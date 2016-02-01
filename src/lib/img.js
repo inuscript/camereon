@@ -2,7 +2,8 @@ import {logoApi} from "../api"
 import clustering from "./clustering"
 import parse from "pixelbank"
 import Color from "color"
-import RgbQuant from "rgbquant";
+import RgbQuant from "rgbquant"
+import quantize from "quantize"
 
 const promiseImage = function(src){
   return new Promise((resolve, reject) => {
@@ -14,25 +15,17 @@ const promiseImage = function(src){
   })
 }
 
-const quant = function(canvas){
-  let q = new RgbQuant({
-    colors: 4
+const quant = function(imageData){
+  let parsed = parse(imageData)
+  let colors = parsed.map((px) => {
+    return Color(px.color).rgbArray()
   })
-  q.sample(canvas)
-  let palette = q.palette(true)
-  let reduce = q.reduce(canvas)
-
-  let rcan = document.createElement("canvas")
-  let rctx = rcan.getContext('2d')
-  rctx.imageSmoothingEnabled = false
-
-  let imgd = rctx.createImageData(canvas.width, canvas.height)
-  let buf32 = new Uint32Array(imgd.data.buffer)
-  buf32.set(new Uint32Array(reduce.buffer))
-  rctx.putImageData(imgd, 0, 0)
-
-  let ctx = canvas.getContext('2d')
-  ctx.drawImage(rcan, 0, 0)
+  let cmap = quantize(colors, 10)
+  // // console.log(cmap.palette())
+  let qunatized = parsed.map( (px) => {
+    return cmap.map(px)
+  })
+  // console.log(qunatized)
 }
 
 const drawImage = function(canvas, imageElement){
@@ -47,8 +40,8 @@ const drawImage = function(canvas, imageElement){
 const imgToData = function(imageElement){
   let canvas = document.createElement("canvas")
   let ctx = drawImage(canvas, imageElement)
-  quant(canvas)
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+  quant(imageData)
   return imageData
 }
 
