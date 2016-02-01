@@ -33,45 +33,61 @@ const drawImage = function(canvas, imageElement){
   canvas.width = imageElement.width
   canvas.height = imageElement.height
   let ctx = canvas.getContext('2d')
-  ctx.imageSmoothingEnabled = false
+  // ctx.imageSmoothingEnabled = false
   ctx.drawImage(imageElement, 0,0)
   return ctx
 }
 
 const imgToData = function(imageElement){
   let canvas = document.createElement("canvas")
+  canvas.width = imageElement.width
+  canvas.height = imageElement.height
   let ctx = drawImage(canvas, imageElement)
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
   return imageData
 }
 
-const qunatizedImg = function(imageData, imageElement){
-  let q = quant(imageData)
+const arrToUrl = function(arr, width, height){
   let canvas = document.createElement("canvas")
+  canvas.width = width
+  canvas.height = height
+
   let ctx = canvas.getContext('2d')
-  let pl = ctx.getImageData(0,0, imageElement.width, imageElement.height)
-  pl.data.set(q)
+  let pl = ctx.getImageData(0,0, width, height)
+  pl.data.set(arr)
   ctx.putImageData(pl,0,0)
   return canvas.toDataURL()
 }
 
+const qunatizedImg = function(imageData){
+  let q = quant(imageData)
+  return arrToUrl(q, imageData.width, imageData.height)
+}
+
 const srcToImage = function(src, onImg){
   return promiseImage(src)
-    .then((_imageElement, e) => {
-      let imageData = imgToData(_imageElement)
-      let qUrl = qunatizedImg(imageData, _imageElement)
-      return promiseImage(qUrl)
-    }).then( (imageElement, e) => {
+    .then((imageElement, e) => {
       let imageData = imgToData(imageElement)
-      return {
-        src,
-        imageElement,
-        imageData
-      }
+      let qUrl = qunatizedImg(imageData)
+      return promiseImage(qUrl).then( (qunatizedImgElement, e) => {
+        return {
+          raw: {
+            src: src,
+            data : imageData,
+            elm: imageElement
+          },
+          quant: {
+            src: qUrl,
+            data: imgToData(qunatizedImgElement),
+            elm: qunatizedImgElement,
+          }
+        }
+      })
     })
 }
 
-export const histogram = function(parsed){
+export const histogram = function(data){
+  let parsed = parse(data)
   let colors = {}
   parsed.forEach((pix) => {
     let str = Color(pix.color).rgbString()
@@ -107,11 +123,5 @@ export const loadImage = function(url){
       return src
     }).then(src => {
       return srcToImage(src)
-    }).then(imgs => {
-      let parsed = parse(imgs.imageData)
-      return {
-        preview: imgs,
-        parsed: parsed
-      }
     })
 }

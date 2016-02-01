@@ -8,9 +8,8 @@ export const changeUrl = createAction(types.CHANGE_URL, (url) => url)
 
 export const getImage = function(url){
   return function(dispatch){
-    loadImage(url).then((imgs) => {
-      let {preview, parsed} = imgs
-      let hist = histogram(parsed)
+    loadImage(url).then((preview) => {
+      let hist = histogram(preview.quant.data)
       dispatch(setPreview(preview))
       dispatch(setHistogram([hist]))
       // analyse(hist).then(clusters => {
