@@ -24,7 +24,6 @@ const quant = function(imageData){
   // console.log(cmap.palette())
   let quantized = parsed.reduce( (r, px) => {
     let quant = [...cmap.map(Color(px.color).rgbArray()), px.color.a]
-    // console.log(px.color, quant)
     return r.concat(quant)
   }, [])
   return new Uint8ClampedArray(quantized)
